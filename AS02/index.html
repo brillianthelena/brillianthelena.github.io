@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Beauty of Everyday Moments</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f7f9fc;
+      color: #333;
+      line-height: 1.7;
+      scroll-behavior: smooth; /* 平滑滾動 */
+    }
+
+    /* Banner */
+    header {
+      position: relative;
+      text-align: center;
+      color: white;
+    }
+    header img {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      display: block;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+    }
+    header h1 {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: 600;
+      z-index: 1;
+    }
+
+    /* Sections */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #111;
+    }
+    section p {
+      margin-bottom: 1rem;
+      text-align: justify;
+    }
+
+    /* Card Style */
+    .card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #000; /* 黑底 */
+      color: #fff;      /* 白字 */
+      font-size: 0.9rem;
+    }
+
+    /* Side Navigation */
+    nav {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 0.5rem 1rem;
+    }
+    nav a {
+      display: block;
+      margin: 0.5rem 0;
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #0077b6;
+    }
+  </style>
+</head>
+<body>
+  <!-- Banner -->
+  <header id="home">
+    <img src="https://source.unsplash.com/1200x800/?urban" alt="Banner">
+    <h1>The Beauty of Everyday Moments</h1>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#intro">Intro</a>
+    <a href="#joys">Everyday Joys</a>
+    <a href="#urban">Urban Inspirations</a>
+    <a href="#conclusion">Conclusion</a>
+  </nav>
+
+  <!-- Sections -->
+  <section id="intro">
+    <div class="card">
+      <h2>Introduction</h2>
+      <p>
+        Life is often measured by milestones, yet our truest happiness emerges in the unnoticed
+        rhythms of daily life. These small fragments—like a gentle breeze or the sound of footsteps
+        in the city—remind us that meaning hides in the ordinary.
+      </p>
+    </div>
+  </section>
+
+  <section id="joys">
+    <div class="card">
+      <h2>Everyday Joys</h2>
+      <p>
+        Everyday joys are gifts of simplicity: laughter shared over coffee, the comfort of a familiar
+        street, or the quiet of early morning. These moments ground us and help us find clarity amid
+        chaos.
+      </p>
+    </div>
+  </section>
+
+  <section id="urban">
+    <div class="card">
+      <h2>Urban Inspirations</h2>
+      <p>
+        The city itself teaches us about beauty in motion. Neon reflections on rainy nights, murals
+        painted on forgotten walls, and the vibrant hum of street music all remind us that beauty
+        thrives even in unexpected corners of urban life.
+      </p>
+    </div>
+  </section>
+
+  <section id="conclusion">
+    <div class="card">
+      <h2>Conclusion</h2>
+      <p>
+        By noticing the extraordinary in the ordinary, we cultivate gratitude and perspective. This
+        practice does not require grand gestures—only a willingness to pause, breathe, and look
+        closer. The beauty of everyday moments is always within reach.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Created by Helena ✨ | Web Design & Narrative Practice</p>
+  </footer>
+</body>
+</html>

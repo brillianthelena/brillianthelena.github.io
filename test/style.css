@@ -1,0 +1,25 @@
+#banner {
+    width: 800px;
+    height: 100px;
+    background-color: beige;
+}
+#content {
+    width: 600px;
+    height: 400px;
+}
+#footer {
+    width: 800px;
+    height: 50px;
+    background-color:gray;
+}
+#supporting {
+    width: 100px;
+    height: 150px;
+    background-color:pink;
+}
+
+#nav {
+    width: 100px;
+    height: 200px;
+    background-color:lightgray;
+}
