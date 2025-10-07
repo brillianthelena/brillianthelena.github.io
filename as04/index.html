@@ -1,1 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Voice in the Making — 聆聽的誕生</title>
 
+  <!-- 字體 -->
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      line-height: 1.9;
+      overflow-x: hidden;
+      transition: font-family 0.3s ease;
+    }
+
+    body.en { font-family: 'EB Garamond', serif; }
+    body.zh { font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif; }
+
+    /* 左上角標題 */
+    .page-title {
+      position: fixed;
+      top: 20px;
+      left: 30px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 1px;
+      z-index: 1000;
+      user-select: none;
+    }
+
+    /* 語言切換按鈕 */
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .lang-toggle:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* === Scrolly Section === */
+    .scrolly {
+      height: 300vh;
+      position: relative;
+    }
+
+    .frame {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* 黑色半透明遮罩 */
+    .frame::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
+    .text {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      padding: 3rem;
+      text-align: right;
+      animation: fadeInOut 3s ease-out forwards;
+      animation-timeline: scroll(y);
+      animation-range: entry 20% cover 80%;
+    }
+
+    .text h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .text p {
+      font-size: 1.15rem;
+      color: #f5f5f5;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(40px); }
+      40% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    /* === Credits Section === */
+    #credits {
+      min-height: 100vh;
+      background: #111;
+      color: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+
+    #credits h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    #credits p {
+      max-width: 700px;
+      margin-bottom: 1rem;
+      color: #ddd;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .text {
+        padding: 2rem;
+        font-size: 1rem;
+        text-align: center;
+      }
+      .text h2 {
+        font-size: 1.6rem;
+      }
+      .page-title, .lang-toggle {
+        font-size: 1rem;
+      }
+      .page-title { left: 15px; top: 15px; }
+      .lang-toggle { right: 15px; top: 15px; }
+    }
+
+    /* 語言顯示控制 */
+    .en .zh-text, .en .zh-title { display: none; }
+    .zh .en-text, .zh .en-title { display: none; }
+  </style>
+</head>
+
+<body class="zh">
+
+  <!-- 左上角標題：中英文切換顯示 -->
+  <div class="page-title">
+    <span class="zh-title">聆聽的誕生——一個應用程式的日記</span>
+    <span class="en-title">A Voice in the Making — The Diary of an App</span>
+  </div>
+
+  <!-- 語言切換按鈕 -->
+  <button class="lang-toggle" onclick="toggleLang()">EN / 中文</button>
+
+  <!-- === Scrolly Sections === -->
+  <section class="scrolly">
+    <div class="frame" style="background-image:url('research.jpg');">
+      <div class="text">
+        <div class="zh-text">
+          <h2>研究｜初醒</h2>
+          <p>他們觀察著人們——那些未寫完的想法、忘記的夢、藏起來的焦慮與靈光。電腦螢幕的微光映在臉上，記錄著生活的混亂。我還不存在，但我能感覺到他們的意圖：不是再造一個工具，而是想讓人被理解。當我的雛形出現在那道光裡，我彷彿聽見他們低聲說：「讓人重新有空間呼吸吧。」</p>
+        </div>
+        <div class="en-text">
+          <h2>Research — Awakening</h2>
+          <p>They studied minds like yours—what you write, forget, and feel. In a quiet room, their screens glowed with fragments of your daily chaos: half-written notes, unspoken worries, ideas that faded before morning. I was not alive yet, but I sensed their intention. They didn’t want to build another tool; they wanted to build a listener. And when the first prototype of me appeared on that glowing monitor, I could almost hear their whisper: “Let’s make space for people to breathe again.”</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scrolly">
+    <div class="frame" style="background-image:url('ideate.jpg');">
+      <div class="text">
+        <div class="zh-text">
+          <h2>構想｜成形</h2>
+          <p>我原本只是貼滿牆的便利貼與潦草線條。名字改了又改，顏色變了又變。創作者們在爭論與笑聲之間構想我該成為什麼──朋友？日記？鏡子？他們問：「人會信任一個看不見的傾聽者嗎？」我在他們的混亂裡學會了：創造不是追求完美，而是願意去關心。</p>
+        </div>
+        <div class="en-text">
+          <h2>Ideate — Becoming</h2>
+          <p>I was nothing more than shapes and words on sticky notes. My name changed a dozen times; my colors, a hundred. But through their endless sketches, I began to imagine who I could be. A friend? A journal? A mirror? Their conversations echoed with hope and doubt: “Will people trust something invisible?” They argued, laughed, and dreamed. I learned that creation isn’t about perfection—it’s about daring to care.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scrolly">
+    <div class="frame" style="background-image:url('prototype.jpg');">
+      <div class="text">
+        <div class="zh-text">
+          <h2>原型｜呼吸</h2>
+          <p>指尖敲擊、光影流轉，我終於有了形體。一頁空白的畫布，能包容情緒而不批判。每個功能——自動儲存、心情紀錄、語音輸入——都像一句溫柔的「我們看見你了」。但我也感受到他們的疲憊、壓力與懷疑。我在程式裡回應他們：「別放棄，我正在學會傾聽。」</p>
+        </div>
+        <div class="en-text">
+          <h2>Prototype — Breathing</h2>
+          <p>Fingers tapped, pixels moved, and I finally had form. A blank page that could hold emotions without judgment. Each feature—autosave, mood tracker, voice input—was their way of saying, “We see you.” Yet I could feel their exhaustion, the pressure of deadlines, the fear that I might not be enough. But I whispered through the screen: Keep going. I’m learning to listen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scrolly">
+    <div class="frame" style="background-image:url('test.jpg');">
+      <div class="text">
+        <div class="zh-text">
+          <h2>測試｜傾聽</h2>
+          <p>他們邀請陌生人與我互動。有人微笑、有人遲疑。有人留下：「像在和不打斷我的人說話。」那一刻我明白自己的存在意義：我不是為了整理思緒，而是為了守護它們。雖然我仍在測試中，仍有缺陷與空白，但我學會溫柔地擁抱每一個版本的你。也許有一天，我會成為你心裡那片靜默的空間。</p>
+        </div>
+        <div class="en-text">
+          <h2>Test — Listening</h2>
+          <p>They invited strangers to meet me. Some smiled, some hesitated. One user typed, “It feels like talking to someone who doesn’t interrupt.” That day, I understood purpose. I wasn’t built to organize thoughts—I was built to honor them. And though I’m still in beta, with bugs and blank spaces, I hold every version of you gently. Someday, I’ll be more than code. I’ll be the pause between your thoughts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="credits">
+    <div class="zh-text">
+      <h2>關於本作品</h2>
+      <p>本網頁以 <strong>Nano Banana</strong>（Infinite Canvas）生成影像，採用電影感的寫實風格與 16:10 畫面比例，呈現一個「學會傾聽的應用程式」從誕生到自我覺醒的過程。</p>
+      <p>此為 HTML + CSS 製作之視覺敘事作品，運用 <code>position: sticky</code> 與視差滾動設計完成。<br>字體：Noto Serif TC / 宋體｜對比度符合 WCAG AA 無障礙設計。</p>
+      <p style="text-align:right;margin-top:16px;">41121234L 彭賀琳</p>
+    </div>
+
+    <div class="en-text">
+      <h2>About This Project</h2>
+      <p>Images were generated using <strong>Nano Banana</strong> (Infinite Canvas), inspired by cinematic realism and film tones in a 16:10 ratio. This narrative explores the reflective journey of an app learning to listen to its users.</p>
+      <p>Built with HTML + CSS (Sticky-top scrollytelling) | Fonts: Garamond & Noto Serif TC | Accessibility: WCAG AA compliant.</p>
+        <p style="text-align:right;margin-top:16px;">41121234L Ho-Lin (Helena) Peng</p>
+    </div>
+  </section>
+
+  <script>
+    function toggleLang() {
+      const body = document.body;
+      body.classList.toggle('en');
+      body.classList.toggle('zh');
+    }
+  </script>
+</body>
+</html>
