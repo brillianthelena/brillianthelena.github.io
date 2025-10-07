@@ -17,7 +17,11 @@
       color: #fff;
       line-height: 1.9;
       overflow-x: hidden;
-      transition: font-family 0.3s ease;
+      transition: font-family 0.3s ease, opacity 0.6s ease;
+    }
+
+    body.fade {
+      opacity: 0;
     }
 
     body.en { font-family: 'EB Garamond', serif; }
@@ -137,7 +141,7 @@
     }
 
     #credits p {
-      max-width: 700px;
+      max-width: 760px;
       margin-bottom: 1rem;
       color: #ddd;
       font-size: 1rem;
@@ -149,12 +153,8 @@
         font-size: 1rem;
         text-align: center;
       }
-      .text h2 {
-        font-size: 1.6rem;
-      }
-      .page-title, .lang-toggle {
-        font-size: 1rem;
-      }
+      .text h2 { font-size: 1.6rem; }
+      .page-title, .lang-toggle { font-size: 1rem; }
       .page-title { left: 15px; top: 15px; }
       .lang-toggle { right: 15px; top: 15px; }
     }
@@ -167,7 +167,7 @@
 
 <body class="zh">
 
-  <!-- 左上角標題：中英文切換顯示 -->
+  <!-- 左上角標題 -->
   <div class="page-title">
     <span class="zh-title">聆聽的誕生——一個應用程式的日記</span>
     <span class="en-title">A Voice in the Making — The Diary of an App</span>
@@ -237,28 +237,36 @@
     </div>
   </section>
 
+  <!-- === Credits === -->
   <section id="credits">
     <div class="zh-text">
       <h2>關於本作品</h2>
-      <p>本網頁以 <strong>Nano Banana</strong>（Infinite Canvas）生成影像，採用電影感的寫實風格與 16:10 畫面比例，呈現一個「學會傾聽的應用程式」從誕生到自我覺醒的過程。</p>
-      <p>此為 HTML + CSS 製作之視覺敘事作品，運用 <code>position: sticky</code> 與視差滾動設計完成。<br>字體：Noto Serif TC / 宋體｜對比度符合 WCAG AA 無障礙設計。</p>
+      <p>本網頁以 <strong>Nano Banana</strong>（Infinite Canvas）生成影像，並在製作過程中加入黑色遮罩以突顯白色文字，營造出溫柔卻具對比的閱讀氛圍。</p>
+      <p>此為 HTML + CSS 製作之敘事設計練習，包含固定滾動（<code>position: sticky</code>）與視差效果。後期增添了中英文切換按鈕、字體切換功能，以及淡入淡出動畫，呈現更流暢的互動體驗。</p>
+      <p>本作品與 ChatGPT 共同協作完成</p>
       <p style="text-align:right;margin-top:16px;">41121234L 彭賀琳</p>
     </div>
 
     <div class="en-text">
       <h2>About This Project</h2>
-      <p>Images were generated using <strong>Nano Banana</strong> (Infinite Canvas), inspired by cinematic realism and film tones in a 16:10 ratio. This narrative explores the reflective journey of an app learning to listen to its users.</p>
-      <p>Built with HTML + CSS (Sticky-top scrollytelling) | Fonts: Garamond & Noto Serif TC | Accessibility: WCAG AA compliant.</p>
-        <p style="text-align:right;margin-top:16px;">41121234L Ho-Lin (Helena) Peng</p>
+      <p>All images were generated via <strong>Nano Banana</strong> (Infinite Canvas). During production, a dark overlay was added to enhance contrast and let the white narrative text breathe with clarity.</p>
+      <p>This web narrative was built using pure HTML + CSS, featuring <code>position: sticky</code> sections and parallax effects. Later stages introduced a bilingual toggle, font-switching logic, and fade transition to create a smoother interaction flow.</p>
+      <p>Co-created by ChatGPT, this project explores the harmony between human intuition and algorithmic storytelling — a quiet dialogue between code and emotion.</p>
+      <p style="text-align:right;margin-top:16px;">41121234L Ho-lin (Helena) Peng</p>
     </div>
   </section>
 
   <script>
     function toggleLang() {
       const body = document.body;
-      body.classList.toggle('en');
-      body.classList.toggle('zh');
+      body.classList.add('fade');
+      setTimeout(() => {
+        body.classList.toggle('en');
+        body.classList.toggle('zh');
+        body.classList.remove('fade');
+      }, 400);
     }
   </script>
+
 </body>
 </html>
