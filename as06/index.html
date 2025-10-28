@@ -1,179 +1,172 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>專注的節奏：在快節奏世界中重新學會慢下來</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root{
-      --bg:#fff;
-      --card-bg:#fcfcfd; /* 更淺灰 */
-      --text:#111827;
-      --subtext:#6b7280;
-      --primary:#4f46e5;
-      --accent:#fbbf24; /* 螢光筆黃 */
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:'Noto Serif TC','宋體',serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.85;
-      transition:filter .4s ease;
-    }
-    header{ text-align:center; padding:6rem 1rem 3rem; }
-    header h1{ font-size:2rem; margin:.25rem 0 .25rem; }
-    header p{ color:var(--subtext); margin:0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color in Focus｜繽紛中的專注</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fefefe;
+  --section-bg1:linear-gradient(135deg,#fceabb,#f8b500);
+  --section-bg2:linear-gradient(135deg,#a1c4fd,#c2e9fb);
+  --section-bg3:linear-gradient(135deg,#ffecd2,#fcb69f);
+  --text:#222;
+  --primary:#ff6b81;
+  --accent:#ffd43b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Noto Serif TC','宋體',serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.8;
+  transition:background .5s;
+}
+header{text-align:center;padding:6rem 1rem 3rem;}
+header h1{font-size:2.2rem;margin-bottom:.5rem;color:var(--primary);}
+header p{color:#555;}
 
-    section{
-      max-width:800px; margin:6rem auto; padding:3rem;
-      border-radius:16px; background:var(--card-bg);
-      box-shadow:0 6px 20px rgba(0,0,0,.05);
-      transition:filter .4s ease, box-shadow .4s ease; position:relative; z-index:1;
-    }
-    body.dimmed{ filter:brightness(.6) grayscale(.2); }
-    section.in-focus{
-      filter:brightness(1)!important;
-      box-shadow:0 0 20px rgba(79,70,229,.30);
-      z-index:5;
-    }
+section{
+  max-width:900px;margin:6rem auto;padding:3rem;
+  border-radius:24px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+  transition:transform .4s, box-shadow .4s;
+}
+section:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.15);}
+#flip-section{background:var(--section-bg1);}
+#focus-section{background:var(--section-bg2);}
+#text-section{background:var(--section-bg3);}
 
-    /* 中線提示 */
-    .midline{
-      position:fixed; left:0; right:0; top:50%; pointer-events:none; z-index:999;
-    }
-    .midline::before{
-      content:""; display:block; border-top:1px dashed #e5e7eb;
-    }
-    .midline .hint{
-      position:absolute; left:50%; transform:translate(-50%, .5rem);
-      background:#ffffffcc; backdrop-filter:saturate(1.2) blur(2px);
-      border:1px solid #e5e7eb; color:#374151; border-radius:999px;
-      font-size:.85rem; padding:.25rem .75rem;
-    }
+/* === 翻卡效果（無限循環） === */
+.flip-card{
+  perspective:1000px;width:100%;height:280px;margin:40px 0;position:relative;
+}
+.flip-card-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform 0.8s cubic-bezier(.4,.2,.2,1);
+}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg);}
+.flip-card-front,.flip-card-back{
+  position:absolute;width:100%;height:100%;border-radius:18px;
+  backface-visibility:hidden;overflow:hidden;
+  box-shadow:0 6px 20px rgba(0,0,0,.15);
+}
+.flip-card-front{
+  background:url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=1200') center/cover no-repeat;
+}
+.flip-card-back{
+  background:linear-gradient(135deg,#ff6b81,#ffa07a);
+  color:#fff;
+  transform:rotateY(180deg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;
+}
+.flip-card-back h3{color:#fff04d;margin-bottom:.5rem;text-shadow:0 0 6px rgba(0,0,0,.3);}
+.flip-card-back p{color:#fffdf0;}
 
-    /* 翻卡 */
-    .card-container{
-      perspective:1000px; display:flex; justify-content:center; margin-top:2rem;
-    }
-    .flip-card{
-      width:300px; height:200px;
-      transform-style:preserve-3d;
-      transition:transform .8s cubic-bezier(.2,.8,.2,1);
-      position:relative;
-    }
-    .flip-card .front,.flip-card .back{
-      position:absolute; inset:0; border-radius:12px;
-      backface-visibility:hidden; overflow:hidden;
-    }
-    .flip-card .front{
-      background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200') center/cover;
-    }
-    .flip-card .back{
-      background:var(--primary); color:#fff; transform:rotateY(180deg);
-      display:flex; flex-direction:column; justify-content:center; align-items:center;
-      padding:1.5rem; text-align:center;
-    }
-    .flip-card.flipped{ transform:rotateY(180deg); }
-    .flip-card .back h3{ margin:.25rem 0 .5rem; font-size:1.2rem; }
-    .flip-card .back p{ font-size:.95rem; color:#e0e0ff; }
+/* 聚焦模式純CSS */
+.page-dim{
+  position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:rgba(0,0,0,0);
+  animation:dim linear both;
+  animation-timeline:view(#focus-section);
+  animation-range:entry 0% cover 100%;
+}
+@keyframes dim{to{background:rgba(0,0,0,0);}}
+#focus-section{
+  animation:glow linear both;
+  animation-timeline:view(#focus-section);
+  animation-range:entry 0% cover 100%;
+}
+@keyframes glow{to{box-shadow:0 0 24px rgba(0,0,0,.3);}}
 
-    /* 螢光筆底線純 CSS */
-    .ink{
-      position:relative; padding-bottom:.08em;
-      view-timeline-name: --ink;
-      view-timeline-axis: block;
-    }
-    .ink::after{
-      content:""; position:absolute; left:0; bottom:0.02em; height:0.45em; right:0;
-      background:var(--accent);
-      transform-origin:left center; transform:scaleX(0);
-      border-radius:.2em;
-      z-index:-1; /* 放到字後面 */
-      animation:draw-underline linear both;
-      animation-timeline:--ink;
-      animation-range:entry 0% cover 100%;
-    }
-    @keyframes draw-underline{to{transform:scaleX(1);}}
+/* === 🟡 底線動畫（加長、留底層、滑動漸進） === */
+.highlight{
+  position:relative;
+  padding-bottom:.1em;
+  view-timeline-name:--ink;
+  view-timeline-axis:block;
+}
+.highlight::after{
+  content:"";
+  position:absolute;
+  left:-10%;   /* 更長 */
+  right:-10%;  /* 更長 */
+  bottom:0.05em;
+  height:0.55em;
+  background:var(--accent);
+  transform-origin:left center;
+  transform:scaleX(0);
+  border-radius:.25em;
+  z-index:-1;  /* 留在文字下層 */
+  animation:underline linear both;
+  animation-timeline:--ink;
+  animation-range:entry 0% cover 100%;
+}
+@keyframes underline{
+  from{transform:scaleX(0);}
+  to{transform:scaleX(1);}
+}
 
-    @media (prefers-reduced-motion: reduce){
-      *{animation:none!important;transition:none!important;}
-      .ink::after{transform:scaleX(1);}
-    }
-  </style>
+/* 動效簡化模式 */
+@media (prefers-reduced-motion:reduce){
+  .flip-card-inner,.highlight::after{transition:none;animation:none;transform:scaleX(1);}
+}
+</style>
 </head>
 <body>
-  <div class="midline" aria-hidden="true">
-    <div class="hint">把卡片捲到畫面中間看看效果（接近中線時自動翻面）</div>
-  </div>
+<div class="page-dim" aria-hidden="true"></div>
+<header>
+  <h1>Color in Focus｜繽紛中的專注</h1>
+  <p>在色彩流動之間，重新學會看見每一刻的專注。</p>
+</header>
 
-  <header>
-    <h1>專注的節奏</h1>
-    <p>在快節奏世界中重新學會慢下來</p>
-  </header>
-
-  <section id="flip-section">
-    <h2>1️⃣ 翻卡：從分心到專注</h2>
-    <p>當卡片滾動到畫面中央，它會翻轉，象徵你開始由外在刺激轉向內在專注。</p>
-    <div class="card-container">
-      <div class="flip-card" aria-label="可翻面的說明卡">
-        <div class="front" title="正面：雜訊世界"></div>
-        <div class="back">
-          <h3>專注的本質</h3>
-          <p>真正的專注，是學會對雜訊說不。<br>在沉默中，我們聽見自己。</p>
-        </div>
+<section id="flip-section">
+  <h2>1️⃣ 翻卡：從分心到專注</h2>
+  <p>當卡片滾動到畫面中央時，它會翻轉，象徵你由雜亂回到內心的平衡。</p>
+  <div class="flip-card">
+    <div class="flip-card-inner">
+      <div class="flip-card-front"></div>
+      <div class="flip-card-back">
+        <h3>專注的本質</h3>
+        <p>真正的專注，不是排除一切聲音，<br>而是聽見內心最想說的那一句話。</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="focus-section">
-    <h2>2️⃣ 聚焦模式：讓心靜下來</h2>
-    <p>
-      當你滑動到這一段時，頁面會進入聚焦模式。其他部分色調將變暗，只有這一區保留光亮。<br>
-      這是提醒：<span class="ink">注意力，是最珍貴的資源</span>。
-    </p>
-    <div class="sentinel"></div>
-  </section>
+<section id="focus-section">
+  <h2>2️⃣ 聚焦模式：讓心靜下來</h2>
+  <p>
+    當你滑動到這一段時，畫面會逐步聚焦。<br>
+    這提醒我們：<span class="highlight">注意力，是當代最稀缺的資產</span>。
+  </p>
+</section>
 
-  <section id="text-section">
-    <h2>3️⃣ 底線動畫（純 CSS）：慢下來，才看得清楚</h2>
-    <p>
-      捲動時，被圈選的詞會依進場進度畫出底線（純 CSS）。例如：
-      <span class="ink">慢閱讀</span>、
-      <span class="ink">深思考</span>、
-      <span class="ink">細感受</span>。
-    </p>
-  </section>
+<section id="text-section">
+  <h2>3️⃣ 底線動畫：慢下來，才看得清楚</h2>
+  <p>
+    捲動時，被圈選的詞會重新閃亮：<br>
+    <span class="highlight">慢閱讀</span>、<span class="highlight">深思考</span>、<span class="highlight">細感受</span>。<br>
+    在這些小瞬間裡，專注正悄悄發生。
+  </p>
+</section>
 
-  <script>
-    // 修正版：觀察整個 card-container，而非卡片本體
-    const cardContainer = document.querySelector('.card-container');
-    const card = document.querySelector('.flip-card');
-    const flipObserver = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting) card.classList.add('flipped');
-        else card.classList.remove('flipped');
-      });
-    },{threshold:0.6});
-    flipObserver.observe(cardContainer);
-
-    // 聚焦模式同前
-    const sections=document.querySelectorAll('section');
-    const focusObserver=new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          document.body.classList.add('dimmed');
-          entry.target.classList.add('in-focus');
-        }else{
-          entry.target.classList.remove('in-focus');
-          if(![...sections].some(sec=>sec.classList.contains('in-focus')))
-            document.body.classList.remove('dimmed');
-        }
-      });
-    },{threshold:0.3});
-    sections.forEach(sec=>focusObserver.observe(sec));
-  </script>
+<script>
+// 翻卡（無限循環）
+const card=document.querySelector('.flip-card');
+const inner=card.querySelector('.flip-card-inner');
+const flipObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      inner.style.transform = 
+        inner.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+    }
+  });
+},{threshold:0.6});
+flipObserver.observe(card);
+</script>
 </body>
 </html>
