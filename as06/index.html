@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>專注的節奏：在快節奏世界中重新學會慢下來</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#fff;
+      --card-bg:#fcfcfd; /* 更淺灰 */
+      --text:#111827;
+      --subtext:#6b7280;
+      --primary:#4f46e5;
+      --accent:#fbbf24; /* 螢光筆黃 */
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Noto Serif TC','宋體',serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.85;
+      transition:filter .4s ease;
+    }
+    header{ text-align:center; padding:6rem 1rem 3rem; }
+    header h1{ font-size:2rem; margin:.25rem 0 .25rem; }
+    header p{ color:var(--subtext); margin:0; }
+
+    section{
+      max-width:800px; margin:6rem auto; padding:3rem;
+      border-radius:16px; background:var(--card-bg);
+      box-shadow:0 6px 20px rgba(0,0,0,.05);
+      transition:filter .4s ease, box-shadow .4s ease; position:relative; z-index:1;
+    }
+    body.dimmed{ filter:brightness(.6) grayscale(.2); }
+    section.in-focus{
+      filter:brightness(1)!important;
+      box-shadow:0 0 20px rgba(79,70,229,.30);
+      z-index:5;
+    }
+
+    /* 中線提示 */
+    .midline{
+      position:fixed; left:0; right:0; top:50%; pointer-events:none; z-index:999;
+    }
+    .midline::before{
+      content:""; display:block; border-top:1px dashed #e5e7eb;
+    }
+    .midline .hint{
+      position:absolute; left:50%; transform:translate(-50%, .5rem);
+      background:#ffffffcc; backdrop-filter:saturate(1.2) blur(2px);
+      border:1px solid #e5e7eb; color:#374151; border-radius:999px;
+      font-size:.85rem; padding:.25rem .75rem;
+    }
+
+    /* 翻卡 */
+    .card-container{
+      perspective:1000px; display:flex; justify-content:center; margin-top:2rem;
+    }
+    .flip-card{
+      width:300px; height:200px;
+      transform-style:preserve-3d;
+      transition:transform .8s cubic-bezier(.2,.8,.2,1);
+      position:relative;
+    }
+    .flip-card .front,.flip-card .back{
+      position:absolute; inset:0; border-radius:12px;
+      backface-visibility:hidden; overflow:hidden;
+    }
+    .flip-card .front{
+      background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200') center/cover;
+    }
+    .flip-card .back{
+      background:var(--primary); color:#fff; transform:rotateY(180deg);
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      padding:1.5rem; text-align:center;
+    }
+    .flip-card.flipped{ transform:rotateY(180deg); }
+    .flip-card .back h3{ margin:.25rem 0 .5rem; font-size:1.2rem; }
+    .flip-card .back p{ font-size:.95rem; color:#e0e0ff; }
+
+    /* 螢光筆底線純 CSS */
+    .ink{
+      position:relative; padding-bottom:.08em;
+      view-timeline-name: --ink;
+      view-timeline-axis: block;
+    }
+    .ink::after{
+      content:""; position:absolute; left:0; bottom:0.02em; height:0.45em; right:0;
+      background:var(--accent);
+      transform-origin:left center; transform:scaleX(0);
+      border-radius:.2em;
+      z-index:-1; /* 放到字後面 */
+      animation:draw-underline linear both;
+      animation-timeline:--ink;
+      animation-range:entry 0% cover 100%;
+    }
+    @keyframes draw-underline{to{transform:scaleX(1);}}
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important;transition:none!important;}
+      .ink::after{transform:scaleX(1);}
+    }
+  </style>
+</head>
+<body>
+  <div class="midline" aria-hidden="true">
+    <div class="hint">把卡片捲到畫面中間看看效果（接近中線時自動翻面）</div>
+  </div>
+
+  <header>
+    <h1>專注的節奏</h1>
+    <p>在快節奏世界中重新學會慢下來</p>
+  </header>
+
+  <section id="flip-section">
+    <h2>1️⃣ 翻卡：從分心到專注</h2>
+    <p>當卡片滾動到畫面中央，它會翻轉，象徵你開始由外在刺激轉向內在專注。</p>
+    <div class="card-container">
+      <div class="flip-card" aria-label="可翻面的說明卡">
+        <div class="front" title="正面：雜訊世界"></div>
+        <div class="back">
+          <h3>專注的本質</h3>
+          <p>真正的專注，是學會對雜訊說不。<br>在沉默中，我們聽見自己。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="focus-section">
+    <h2>2️⃣ 聚焦模式：讓心靜下來</h2>
+    <p>
+      當你滑動到這一段時，頁面會進入聚焦模式。其他部分色調將變暗，只有這一區保留光亮。<br>
+      這是提醒：<span class="ink">注意力，是最珍貴的資源</span>。
+    </p>
+    <div class="sentinel"></div>
+  </section>
+
+  <section id="text-section">
+    <h2>3️⃣ 底線動畫（純 CSS）：慢下來，才看得清楚</h2>
+    <p>
+      捲動時，被圈選的詞會依進場進度畫出底線（純 CSS）。例如：
+      <span class="ink">慢閱讀</span>、
+      <span class="ink">深思考</span>、
+      <span class="ink">細感受</span>。
+    </p>
+  </section>
+
+  <script>
+    // 修正版：觀察整個 card-container，而非卡片本體
+    const cardContainer = document.querySelector('.card-container');
+    const card = document.querySelector('.flip-card');
+    const flipObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting) card.classList.add('flipped');
+        else card.classList.remove('flipped');
+      });
+    },{threshold:0.6});
+    flipObserver.observe(cardContainer);
+
+    // 聚焦模式同前
+    const sections=document.querySelectorAll('section');
+    const focusObserver=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          document.body.classList.add('dimmed');
+          entry.target.classList.add('in-focus');
+        }else{
+          entry.target.classList.remove('in-focus');
+          if(![...sections].some(sec=>sec.classList.contains('in-focus')))
+            document.body.classList.remove('dimmed');
+        }
+      });
+    },{threshold:0.3});
+    sections.forEach(sec=>focusObserver.observe(sec));
+  </script>
+</body>
+</html>
