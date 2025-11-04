@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>紅包場：時間的舞台 — Scroll Mapping x Horizontal Timeline</title>
+  <meta name="description" content="以 Sticky + Scroll Mapping 與 Horizontal Scrolling Timeline 敘事台灣紅包場文化：從繁華到式微、從舞台到記憶。"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    :root{
+      --ink:#000;
+      --paper:#fff;
+      --glass:rgba(255,255,255,0.15);
+      --glass-border:rgba(255,255,255,0.25);
+    }
+    body{
+      background:var(--ink);
+      color:var(--paper);
+      font-family:"Songti TC","SimSun","PMingLiU",serif;
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    .intro{
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:2rem;
+      background:#000;
+    }
+    .intro h1{
+      font-size:2.5rem;
+      margin-bottom:1rem;
+      color:var(--paper);
+    }
+    .intro p{
+      max-width:800px;
+      margin:0 auto;
+      color:var(--paper);
+      opacity:.9;
+    }
+
+    /* 增加 #outer sticky 的父容器高度，使 sticky 在更多捲動距離內保持貼頂（可依需求調整） */
+    #scroll-wrap{
+      height:400vh; /* 原 280vh -> 改成 400vh 讓停留更長 */
+    }
+    #outer{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:100%;
+      overflow:hidden;
+      background:#000;
+    }
+    #outer::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:url('assets/era_80s_glitter.jpg') center/cover no-repeat fixed;
+      opacity:.9;
+    }
+    #statusbar{
+      position:absolute;
+      inset:0;
+      width:0%;
+      background:url('assets/now_empty_hall.jpg') center/cover no-repeat fixed;
+      transition:width 120ms linear;
+    }
+
+    .caption{
+      position:absolute;
+      right:3%;
+      top:10%;
+      width:35%;
+      padding:1.2rem;
+      background:var(--glass);
+      backdrop-filter:blur(12px) saturate(160%);
+      -webkit-backdrop-filter:blur(12px) saturate(160%);
+      border:1px solid var(--glass-border);
+      border-radius:12px;
+      color:var(--paper);
+      box-shadow:0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .banner{
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:2rem;
+      background:#111;
+    }
+    .banner h3{
+      font-size:2rem;
+      color:var(--paper);
+    }
+
+    .scroll-container,.scroll-container-reverse{height:720vh;position:relative;}
+    .horizontal-section,.horizontal-section-reverse{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:400vw;
+      display:flex;
+      transition:transform .08s linear;
+    }
+    .h-item{
+      width:100vw;
+      height:100vh;
+      flex:0 0 100vw;
+      position:relative;
+      background:#000;
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
+    }
+    .overlay{
+      position:absolute;
+      left:4%;
+      bottom:6%;
+      max-width:40%;
+      padding:1rem 1.2rem;
+      background:var(--glass);
+      backdrop-filter:blur(12px) saturate(160%);
+      -webkit-backdrop-filter:blur(12px) saturate(160%);
+      border:1px solid var(--glass-border);
+      border-radius:12px;
+      color:var(--paper);
+      box-shadow:0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .vh{
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:2rem;
+    }
+  </style>
+</head>
+<body>
+  <section class="intro">
+    <div>
+      <h1>紅包場：時間的舞台</h1>
+      <p>從燈紅酒綠到散場燈滅，台灣的紅包場承載了一代人的夜生活、情感與人情味。以捲動作為時間刻度，帶你看見它的誕生、繁華、與寂寥之後。</p>
+    </div>
+  </section>
+  <section id="scroll-wrap">
+    <div id="outer">
+      <div id="statusbar"></div>
+      <div class="caption">
+        <h2>燈紅酒綠的年代 — 誕生與繁華</h2>
+        <p>80~90 年代，紅包場是城市夜晚的客廳。捲動時，繁華逐步被現實蓋過，像一塊慢慢吞噬的幕布。</p>
+      </div>
+    </div>
+  </section>
+  <section class="banner">
+    <div>
+      <h3>唱給剩下的人聽</h3>
+      <p>繁華不再喧鬧，但舞台依然有人在唱。她們與他們，把每一個名字都叫成一首歌。</p>
+    </div>
+  </section>
+  <section class="scroll-container">
+    <div class="horizontal-section">
+      <div class="h-item" style="background-image:url('assets/show_01_opening.jpg')">
+        <div class="overlay"><h4>開場｜燈亮，人聲起</h4><p>司儀呼喊、樂手調音，第一首歌點給「阿國」。</p></div>
+      </div>
+      <div class="h-item" style="background-image:url('assets/show_02_tips.jpg')">
+        <div class="overlay"><h4>熱場｜紅包飛上舞台</h4><p>紅包在燈下閃爍，每首歌都有故事。</p></div>
+      </div>
+      <div class="h-item" style="background-image:url('assets/show_03_climax.jpg')">
+        <div class="overlay"><h4>高潮｜合唱與擁抱</h4><p>副歌一到，整個場子一起唱。有人落淚，有人笑。</p></div>
+      </div>
+      <div class="h-item" style="background-image:url('assets/show_04_curtain.jpg')">
+        <div class="overlay"><h4>散場｜燈泡一顆顆暗下</h4><p>最後一曲結束，夜色慢慢收場。</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="scroll-container-reverse">
+    <div class="horizontal-section-reverse">
+      <div class="h-item" style="background-image:url('assets/singer_04_memory.jpg')">
+        <div class="overlay"><h4>回望｜留下來的是歌</h4><p>有人說她走了，但錄音帶裡的聲音還在。</p></div>
+      </div>
+      <div class="h-item" style="background-image:url('assets/singer_03_fade.jpg')">
+        <div class="overlay"><h4>晚場｜觀眾漸少</h4><p>她依然唱，只是歌越來越慢。</p></div>
+      </div>
+      <div class="h-item" style="background-image:url('assets/singer_02_bloom.jpg')">
+        <div class="overlay"><h4>熟成｜場子都認識她</h4><p>她學會照顧喉嚨，也學會照顧人情。</p></div>
+      </div>
+      <div class="h-item" style="background-image:url('assets/singer_01_debut.jpg')">
+        <div class="overlay"><h4>初登台｜一襲亮片裙</h4><p>第一次上台，鞋跟微微發抖。</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="vh">
+    <p>散場之後，文化會不會消逝？也許只是換了地方繼續唱。</p>
+  </section>
+  <script>
+    (function(){
+      const wrap=document.getElementById('scroll-wrap');
+      const status=document.getElementById('statusbar');
+      const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+      function updateStatus(){
+        const rect=wrap.getBoundingClientRect();
+        const total=rect.height-innerHeight;
+        const progress= total>0?clamp((-rect.top)/total,0,1):1;
+        status.style.width=(progress*100)+'%';
+      }
+      const containers=document.querySelectorAll('.scroll-container,.scroll-container-reverse');
+      function updateHorizontal(){
+        containers.forEach(c=>{
+          const s=c.querySelector('.horizontal-section,.horizontal-section-reverse');
+          if(!s)return;
+          const r=c.getBoundingClientRect();
+          const total=r.height-innerHeight;
+          const progress=total>0?clamp((-r.top)/total,0,1):1;
+          const maxT=s.scrollWidth-innerWidth;
+          if(c.classList.contains('scroll-container')){
+            s.style.transform=`translateX(${-progress*maxT}px)`;
+          }else{
+            s.style.transform=`translateX(${-(1-progress)*maxT}px)`;
+          }
+        });
+      }
+      addEventListener('scroll',()=>{updateStatus();updateHorizontal();},{passive:true});
+      addEventListener('resize',()=>{updateStatus();updateHorizontal();});
+      updateStatus();updateHorizontal();
+    })();
+  </script>
+</body>
+</html>
