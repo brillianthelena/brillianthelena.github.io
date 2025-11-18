@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>燈紅酒綠的餘溫</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Songti TC', '宋體', 'SimSun', 'STSong', system-ui, serif, sans-serif;
+      background: #000;
+      color: #fff;
+      scroll-behavior: smooth;
+    }
+    body {
+      min-height: 100vh;
+      background: #000;
+    }
+    section {
+      width: 100vw;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    /* --- Landing Page --- */
+    .landing {
+      background: #8b0000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+      text-align: center;
+    }
+    .landing h1 {
+      font-size: 2.8rem;
+      margin: 0 0 1.2rem 0;
+      color: #fff;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .landing .subtitle {
+      font-size: 1.25rem;
+      margin-bottom: 3.5rem;
+      color: #fff;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+    .scroll-btn {
+      position: absolute;
+      left: 50%;
+      bottom: 48px;
+      transform: translateX(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+      z-index: 10;
+    }
+    .scroll-btn:hover {
+      opacity: 1;
+    }
+    .scroll-arrow {
+      margin-top: 0.3em;
+      font-size: 2.2rem;
+      animation: bounce 1.3s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(12px);}
+    }
+
+    /* --- Onboarding Page --- */
+    .onboarding {
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      background: #181818;
+    }
+    .onboarding-left {
+      width: 50vw;
+      min-width: 320px;
+      background: #181818;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 2;
+      box-sizing: border-box;
+      padding: 0;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      width: 92%;
+      height: 92vh;
+      margin: auto;
+    }
+    .video-grid video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      background: #222;
+      display: block;
+    }
+    .onboarding-right {
+      width: 50vw;
+      min-width: 320px;
+      padding: 0 7vw 0 3vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #181818;
+      box-sizing: border-box;
+    }
+    .about-text {
+      max-width: 540px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
+      color: #fff;
+      border-radius: 12px;
+      padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+      font-size: 1.13rem;
+      line-height: 1.85;
+      text-align: left;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    }
+    .about-text strong, .about-text b {
+      font-weight: 700;
+    }
+    @media (max-width: 900px) {
+      .onboarding {
+        flex-direction: column;
+      }
+      .onboarding-left, .onboarding-right {
+        width: 100vw;
+        min-width: 0;
+        height: auto;
+        min-height: 320px;
+      }
+      .onboarding-left {
+        position: static;
+        height: auto;
+        padding: 2vw 0;
+      }
+      .video-grid {
+        height: 48vw;
+        min-height: 220px;
+      }
+      .onboarding-right {
+        padding: 4vw 5vw 6vw 5vw;
+      }
+    }
+
+    /* --- Chapters --- */
+    .chapter {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+    .bg-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+      filter: brightness(0.82) contrast(1.08);
+      background: #222;
+    }
+    .chapter-content {
+      position: relative;
+      z-index: 2;
+      width: 60vw;
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(2px);
+      color: #fff;
+      border-radius: 12px;
+      padding: 2.5rem 3rem;
+      text-align: center;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .chapter-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.04em;
+    }
+    .chapter-desc {
+      font-size: 1.13rem;
+      line-height: 1.85;
+      font-weight: 400;
+    }
+    @media (max-width: 700px) {
+      .chapter-content {
+        width: 90vw;
+        padding: 1.5rem 1rem;
+      }
+      .chapter-title {
+        font-size: 1.15rem;
+      }
+      .chapter-desc {
+        font-size: 1rem;
+      }
+    }
+    /* Hide scrollbars for a cleaner look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #222;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing Page -->
+  <section class="landing" id="landing">
+    <h1>燈紅酒綠的餘溫</h1>
+    <div class="subtitle">A visual exploration of Taiwan's fading “紅包場” culture.</div>
+    <button class="scroll-btn" id="scrollToOnboarding" aria-label="Scroll to Begin">
+      Scroll to Begin
+      <span class="scroll-arrow">↓</span>
+    </button>
+  </section>
+
+  <!-- Onboarding Page -->
+  <section class="onboarding" id="onboarding">
+    <div class="onboarding-left">
+      <div class="video-grid">
+        <video src="videos/posters.mp4" autoplay muted loop playsinline></video>
+        <video src="videos/lights.mp4" autoplay muted loop playsinline></video>
+        <video src="videos/food.mp4" autoplay muted loop playsinline></video>
+        <video src="videos/stage.mp4" autoplay muted loop playsinline></video>
+      </div>
+    </div>
+    <div class="onboarding-right">
+      <div class="about-text">
+        <strong>《燈紅酒綠的餘溫：台灣紅包場的最後身影》</strong><br><br>
+
+        在台灣的城市邊緣、工業區旁、老市場後方，常常會看到一些存在感奇特的建築：<br>
+        迷惑的霓虹燈箱、褪色的紅藍招牌、玻璃門上貼著不知道哪一年留下的歌星海報。<br>
+        很多人不知道，那些地方曾經是台灣最熱鬧、最接地氣、也最具時代象徵的娛樂空間——<b>紅包場</b>。<br><br>
+
+        紅包場興盛於 80、90 年代，是由歌星、舞客、熟客、酒水小姐、樂隊組成的小社會。<br>
+        每晚七點到十一點，這裡都有一場不間斷的微型演唱會：<br>
+        舞台上唱著的多半是熟悉的台語情歌；<br>
+        舞台下，是被燈光照亮的臉孔，有疲憊、有快樂，也有說不出口的寂寞。<br><br>
+
+        隨著娛樂型態轉變與人口老化，紅包場逐年凋零。<br>
+        一家關門、再一家拆除，只剩零星幾間在努力維持燈光。<br><br>
+
+        這個專題透過四段影像，帶你回到這個逐漸消失的世界：<br>
+        <b>海報</b>——記錄明星夢的痕跡；<br>
+        <b>燈光</b>——照亮過繁華，也照亮過落寞；<br>
+        <b>食物</b>——構成紅包場真實的人情味；<br>
+        <b>歌星</b>——唱給剩下的人聽，也是唱給自己聽。<br><br>
+
+        希望你在滑動的過程中，能感受到那份屬於台灣的夜晚記憶：<br>
+        燈光變暗、前奏響起，舞台上的歌手再一次站穩腳步。<br>
+        台下的人不多，但歌，仍然值得唱下去。
+        </div>
+    </div>
+  </section>
+
+  <!-- Chapter 1 -->
+  <section class="chapter" id="chapter1">
+    <video class="bg-video" src="videos/posters.mp4" autoplay muted loop playsinline></video>
+    <div class="chapter-content">
+      <div class="chapter-title">Chapter 1 — 海報：遺留在牆上的明星夢</div>
+     <div class="chapter-desc">
+    在紅包場裡，最能看出過去榮景的不是舞台，而是那些貼在牆上的海報。<br>
+    大濃妝、亮片服、誇張髮型、華麗色塊，是一個年代的美學與企圖心。<br><br>
+
+    如今它們因日曬、潮濕與煙味而泛黃與捲角，<br>
+    卻越破舊、越能顯出它們的珍貴——<br>
+    它們像是時代遺留下來的底片，靜靜貼在牆上。<br><br>
+
+    海報是無聲的證人，見證著那些在舞台上努力追夢的人。<br>
+    有些歌星的名字我們已記不清，但那份「想被看見」的能量仍然停留在紙上。<br><br>
+
+    每一張海報，都提醒著我們：<br>
+    <b>曾經，有一群人把舞台當成唯一的出口。</b><br>
+    </div>
+    </div>
+  </section>
+
+  <!-- Chapter 2 -->
+  <section class="chapter" id="chapter2">
+    <video class="bg-video" src="videos/lights.mp4" autoplay muted loop playsinline></video>
+    <div class="chapter-content">
+      <div class="chapter-title">Chapter 2 — 舞廳燈光：夜色永遠亮著</div>
+      <div class="chapter-desc">
+        在紅包場裡，最能看出過去榮景的不是舞台，而是那些貼在牆上的海報。<br>
+        大濃妝、亮片服、誇張髮型、華麗色塊，是一個年代的美學與企圖心。<br><br>
+
+        如今它們因日曬、潮濕與煙味而泛黃與捲角，<br>
+        卻越破舊、越能顯出它們的珍貴——<br>
+        它們像是時代遺留下來的底片，靜靜貼在牆上。<br><br>
+
+        海報是無聲的證人，見證著那些在舞台上努力追夢的人。<br>
+        有些歌星的名字我們已記不清，但那份「想被看見」的能量仍然停留在紙上。<br><br>
+
+        每一張海報，都提醒著我們：<br>
+        <b>曾經，有一群人把舞台當成唯一的出口。</b><br>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapter 3 -->
+  <section class="chapter" id="chapter3">
+    <video class="bg-video" src="videos/food.mp4" autoplay muted loop playsinline></video>
+    <div class="chapter-content">
+      <div class="chapter-title">Chapter 3 — 食物：紅包場的日常氣味</div>
+    <div class="chapter-desc">
+    很多人不知道，紅包場其實不是只有歌聲，它同時也是一個吃吃喝喝的社交場所。<br><br>
+
+    熱炒的香味，是最實在的氣味記憶：<br>
+    鹽酥雞、宮保雞丁、炒青菜、炸物、炒麵——<br>
+    不奢華，但卻是熟客最安心的味道。<br><br>
+
+    「吃得開心，喝得開心，聽歌就更開心。」<br>
+    這是紅包場最直白也最真實的邏輯。<br><br>
+
+    啤酒在桌上打開，有人替你倒，有人主動來碰杯，<br>
+    幾句寒暄、幾句抱怨、幾句笑聲，<br>
+    音樂與酒精讓生活的壓力在這裡短短離席。<br><br>
+
+    對許多在城市邊緣打拼的人來說，這裡是庇護所。<br>
+    不看身分，不看階級，只看「你來了，我陪你喝」。<br><br>
+
+    <b>食物，是紅包場最真實的人情味。</b>
+    </div>
+    </div>
+  </section>
+
+  <!-- Chapter 4 -->
+  <section class="chapter" id="chapter4">
+    <video class="bg-video" src="videos/stage.mp4" autoplay muted loop playsinline></video>
+    <div class="chapter-content">
+      <div class="chapter-title">Chapter 4 — 舞台歌星：唱給剩下的人聽</div>
+      <div class="chapter-desc">
+        紅包場的歌星並非偶像，他們更像是生活裡的表演者。<br><br>
+
+        他們不需要華麗舞台，只需要一支麥克風、一道燈光、<br>
+        以及台下願意聽的幾個人。<br><br>
+
+        很多歌星從年輕唱到中年，再從中年唱到現在。<br>
+        觀眾變少了，但他們依然站在舞台中央。<br><br>
+
+        有人說：「紅包場不是歌星老了，是觀眾老了。」<br>
+        但事實更殘酷——<br>
+        <b>觀眾不是老了，而是消失了。</b><br><br>
+
+        隨著社會變遷，許多老客人搬家、退休、離世，<br>
+        舞台下的椅子越來越空。<br><br>
+
+        但歌星仍然會在前奏響起時微笑、在燈光落下時站好，<br>
+        就像一切都沒有改變。<br><br>
+
+        因為對他們來說：<br>
+        <b>有人願意聽，就值得唱下去。</b>
+    </div>
+    </div>
+  </section>
+
+  <script>
+    // Smooth scroll for landing page button
+    document.getElementById('scrollToOnboarding').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('onboarding').scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
