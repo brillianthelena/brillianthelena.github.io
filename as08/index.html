@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>燈紅酒綠的餘溫</title>
   <style>
-    html, body {
-      height: 100%;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    html, body {
+      height: 100%;
       font-family: 'Songti TC', '宋體', 'SimSun', 'STSong', system-ui, serif, sans-serif;
       background: #000;
       color: #fff;
       scroll-behavior: smooth;
+      overflow-x: hidden;
     }
     body {
       min-height: 100vh;
@@ -22,6 +26,23 @@
       width: 100vw;
       min-height: 100vh;
       box-sizing: border-box;
+    }
+
+    /* --- Scroll progress bar (TOP) --- */
+    .progress-strip {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      z-index: 9999;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0;
+      background: #ffffff; /* 純白進度條 */
+      transition: width 0.1s linear;
     }
 
     /* --- Landing Page --- */
@@ -34,6 +55,7 @@
       height: 100vh;
       position: relative;
       text-align: center;
+      padding: 0 1.5rem;
     }
     .landing h1 {
       font-size: 2.8rem;
@@ -83,31 +105,46 @@
     .onboarding {
       display: flex;
       flex-direction: row;
-      min-height: 100vh;
+      min-height: 200vh; /* 拉長，讓 sticky 左欄效果更明顯 */
       background: #181818;
+      padding: 4rem 5vw;
+      box-sizing: border-box;
     }
     .onboarding-left {
       width: 50vw;
       min-width: 320px;
-      background: #181818;
+      position: relative;
       display: flex;
       align-items: flex-start;
       justify-content: center;
+    }
+    /* 參考作品：用一個 sticky 容器包住影片網格 */
+    .video-grid-sticky {
       position: sticky;
       top: 0;
       height: 100vh;
-      z-index: 2;
-      box-sizing: border-box;
-      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .video-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 12px;
-      width: 92%;
-      height: 92vh;
-      margin: auto;
+      width: 95%;
+      max-width: 780px;
+      height: 80vh;
+      margin: 0 auto;
+      position: relative;
+    }
+    .video-grid::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      pointer-events: none;
     }
     .video-grid video {
       width: 100%;
@@ -117,53 +154,68 @@
       box-shadow: 0 2px 16px rgba(0,0,0,0.18);
       background: #222;
       display: block;
+      filter: grayscale(0.12);
+      opacity: 0.95;
+      transition: transform 0.4s ease, filter 0.4s ease, opacity 0.3s ease;
     }
+    .video-grid video:hover {
+      transform: scale(1.03);
+      filter: none;
+      opacity: 1;
+    }
+
     .onboarding-right {
       width: 50vw;
       min-width: 320px;
-      padding: 0 7vw 0 3vw;
+      padding-left: 4vw;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       background: #181818;
       box-sizing: border-box;
     }
     .about-text {
       max-width: 540px;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(2px);
+      /* 移除遮罩與陰影 */
+      background: none;
+      backdrop-filter: none;
+      box-shadow: none;
       color: #fff;
-      border-radius: 12px;
-      padding: 2.5rem 2.5rem 2.5rem 2.5rem;
-      font-size: 1.13rem;
+      border-radius: 0;
+      padding: 2rem 0;
+      font-size: 1.05rem;
       line-height: 1.85;
       text-align: left;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.12);
     }
     .about-text strong, .about-text b {
       font-weight: 700;
     }
+
     @media (max-width: 900px) {
       .onboarding {
         flex-direction: column;
+        padding: 3rem 5vw;
+        min-height: auto;
       }
-      .onboarding-left, .onboarding-right {
+      .onboarding-left,
+      .onboarding-right {
         width: 100vw;
         min-width: 0;
-        height: auto;
-        min-height: 320px;
       }
       .onboarding-left {
         position: static;
+      }
+      .video-grid-sticky {
+        position: static;
         height: auto;
-        padding: 2vw 0;
       }
       .video-grid {
         height: 48vw;
         min-height: 220px;
       }
       .onboarding-right {
-        padding: 4vw 5vw 6vw 5vw;
+        padding-left: 0;
+        padding-top: 2rem;
       }
     }
 
@@ -230,7 +282,38 @@
         font-size: 1rem;
       }
     }
-    /* Hide scrollbars for a cleaner look */
+
+    /* --- Video control buttons (bottom right) --- */
+    .video-controls {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 9999;
+    }
+    .ctrl-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.7);
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      white-space: nowrap;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+    .ctrl-btn:hover {
+      background: rgba(0,0,0,0.9);
+      border-color: rgba(255,255,255,0.8);
+      transform: translateY(-1px);
+    }
+
+    /* Scrollbar 美化 */
     ::-webkit-scrollbar {
       width: 8px;
       background: #222;
@@ -242,6 +325,11 @@
   </style>
 </head>
 <body>
+  <!-- 進度條（TOP） -->
+  <div class="progress-strip">
+    <div class="progress-bar-inner" id="scrollProgress"></div>
+  </div>
+
   <!-- Landing Page -->
   <section class="landing" id="landing">
     <h1>燈紅酒綠的餘溫</h1>
@@ -255,11 +343,13 @@
   <!-- Onboarding Page -->
   <section class="onboarding" id="onboarding">
     <div class="onboarding-left">
-      <div class="video-grid">
-        <video src="videos/posters.mp4" autoplay muted loop playsinline></video>
-        <video src="videos/lights.mp4" autoplay muted loop playsinline></video>
-        <video src="videos/food.mp4" autoplay muted loop playsinline></video>
-        <video src="videos/stage.mp4" autoplay muted loop playsinline></video>
+      <div class="video-grid-sticky">
+        <div class="video-grid">
+          <video src="videos/posters.mp4" autoplay muted loop playsinline></video>
+          <video src="videos/lights.mp4" autoplay muted loop playsinline></video>
+          <video src="videos/food.mp4" autoplay muted loop playsinline></video>
+          <video src="videos/stage.mp4" autoplay muted loop playsinline></video>
+        </div>
       </div>
     </div>
     <div class="onboarding-right">
@@ -287,7 +377,7 @@
         希望你在滑動的過程中，能感受到那份屬於台灣的夜晚記憶：<br>
         燈光變暗、前奏響起，舞台上的歌手再一次站穩腳步。<br>
         台下的人不多，但歌，仍然值得唱下去。
-        </div>
+      </div>
     </div>
   </section>
 
@@ -296,28 +386,6 @@
     <video class="bg-video" src="videos/posters.mp4" autoplay muted loop playsinline></video>
     <div class="chapter-content">
       <div class="chapter-title">Chapter 1 — 海報：遺留在牆上的明星夢</div>
-     <div class="chapter-desc">
-    在紅包場裡，最能看出過去榮景的不是舞台，而是那些貼在牆上的海報。<br>
-    大濃妝、亮片服、誇張髮型、華麗色塊，是一個年代的美學與企圖心。<br><br>
-
-    如今它們因日曬、潮濕與煙味而泛黃與捲角，<br>
-    卻越破舊、越能顯出它們的珍貴——<br>
-    它們像是時代遺留下來的底片，靜靜貼在牆上。<br><br>
-
-    海報是無聲的證人，見證著那些在舞台上努力追夢的人。<br>
-    有些歌星的名字我們已記不清，但那份「想被看見」的能量仍然停留在紙上。<br><br>
-
-    每一張海報，都提醒著我們：<br>
-    <b>曾經，有一群人把舞台當成唯一的出口。</b><br>
-    </div>
-    </div>
-  </section>
-
-  <!-- Chapter 2 -->
-  <section class="chapter" id="chapter2">
-    <video class="bg-video" src="videos/lights.mp4" autoplay muted loop playsinline></video>
-    <div class="chapter-content">
-      <div class="chapter-title">Chapter 2 — 舞廳燈光：夜色永遠亮著</div>
       <div class="chapter-desc">
         在紅包場裡，最能看出過去榮景的不是舞台，而是那些貼在牆上的海報。<br>
         大濃妝、亮片服、誇張髮型、華麗色塊，是一個年代的美學與企圖心。<br><br>
@@ -335,30 +403,57 @@
     </div>
   </section>
 
+  <!-- Chapter 2 -->
+  <section class="chapter" id="chapter2">
+    <video class="bg-video" src="videos/lights.mp4" autoplay muted loop playsinline></video>
+    <div class="chapter-content">
+      <div class="chapter-title">Chapter 2 — 舞廳燈光：夜色永遠亮著</div>
+      <div class="chapter-desc">
+        如果說海報是紅包場的記憶，那燈光就是它的靈魂。<br><br>
+
+        紅、藍、紫、黃的光在天花板上旋轉、跳動，<br>
+        舞客看見燈亮起，就知道：<br>
+        <i>又是一個能暫時放下現實的夜晚。</i><br><br>
+
+        舞台上唱著台語情歌，台下有人舉著啤酒輕輕搖晃，<br>
+        光線照到每一張臉上——照到快樂、照到寂寞，也照到那些不願說出的疲憊。<br><br>
+
+        燈有些老了，轉得不再流暢，但依然努力亮著。<br>
+        它知道，一旦熄滅，這裡就真的安靜了。<br><br>
+
+        <b>燈光不是華麗，而是一種陪伴。</b><br>
+        它照亮舞池、照亮舞台，也照亮那些在這裡暫時得到喘息的人。<br><br>
+
+        即使觀眾越來越少，燈光仍會打在舞台中央，彷彿在說：<br>
+        「你還會唱，我就還會亮。」
+      </div>
+    </div>
+  </section>
+
   <!-- Chapter 3 -->
   <section class="chapter" id="chapter3">
     <video class="bg-video" src="videos/food.mp4" autoplay muted loop playsinline></video>
     <div class="chapter-content">
       <div class="chapter-title">Chapter 3 — 食物：紅包場的日常氣味</div>
-    <div class="chapter-desc">
-    很多人不知道，紅包場其實不是只有歌聲，它同時也是一個吃吃喝喝的社交場所。<br><br>
+      <div class="chapter-desc">
+        很多人不知道，紅包場其實不是只有歌聲，它同時也是一個吃吃喝喝的社交場所。<br><br>
 
-    熱炒的香味，是最實在的氣味記憶：<br>
-    鹽酥雞、宮保雞丁、炒青菜、炸物、炒麵——<br>
-    不奢華，但卻是熟客最安心的味道。<br><br>
+        熱炒的香味，是最實在的氣味記憶：<br>
+        鹽酥雞、宮保雞丁、炒青菜、炸物、炒麵——<br>
+        不奢華，但卻是熟客最安心的味道。<br><br>
 
-    「吃得開心，喝得開心，聽歌就更開心。」<br>
-    這是紅包場最直白也最真實的邏輯。<br><br>
+        「吃得開心，喝得開心，聽歌就更開心。」<br>
+        這是紅包場最直白也最真實的邏輯。<br><br>
 
-    啤酒在桌上打開，有人替你倒，有人主動來碰杯，<br>
-    幾句寒暄、幾句抱怨、幾句笑聲，<br>
-    音樂與酒精讓生活的壓力在這裡短短離席。<br><br>
+        啤酒在桌上打開，有人替你倒，有人主動來碰杯，<br>
+        幾句寒暄、幾句抱怨、幾句笑聲，<br>
+        音樂與酒精讓生活的壓力在這裡短短離席。<br><br>
 
-    對許多在城市邊緣打拼的人來說，這裡是庇護所。<br>
-    不看身分，不看階級，只看「你來了，我陪你喝」。<br><br>
+        對許多在城市邊緣打拼的人來說，這裡是庇護所。<br>
+        不看身分，不看階級，只看「你來了，我陪你喝」。<br><br>
 
-    <b>食物，是紅包場最真實的人情味。</b>
-    </div>
+        <b>食物，是紅包場最真實的人情味。</b>
+      </div>
     </div>
   </section>
 
@@ -388,15 +483,61 @@
 
         因為對他們來說：<br>
         <b>有人願意聽，就值得唱下去。</b>
-    </div>
+      </div>
     </div>
   </section>
+
+  <!-- Video controls -->
+  <div class="video-controls">
+    <button class="ctrl-btn" id="playAll">▶ 播放全部</button>
+    <button class="ctrl-btn" id="pauseAll">⏸ 暫停全部</button>
+    <button class="ctrl-btn" id="toggleMute">🔇 靜音</button>
+  </div>
 
   <script>
     // Smooth scroll for landing page button
     document.getElementById('scrollToOnboarding').addEventListener('click', function(e) {
       e.preventDefault();
       document.getElementById('onboarding').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Scroll progress bar
+    const progressBar = document.getElementById('scrollProgress');
+    function handleScroll() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = scrolled + '%';
+    }
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+
+    // Global video controls
+    const allVideos = document.querySelectorAll('video');
+    const playAllBtn = document.getElementById('playAll');
+    const pauseAllBtn = document.getElementById('pauseAll');
+    const toggleMuteBtn = document.getElementById('toggleMute');
+    let isMuted = true; // 和 autoplay muted 一致
+
+    allVideos.forEach(v => {
+      v.muted = true;
+    });
+
+    playAllBtn.addEventListener('click', () => {
+      allVideos.forEach(v => {
+        v.play().catch(() => {});
+      });
+    });
+
+    pauseAllBtn.addEventListener('click', () => {
+      allVideos.forEach(v => v.pause());
+    });
+
+    toggleMuteBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      allVideos.forEach(v => v.muted = isMuted);
+      toggleMuteBtn.textContent = isMuted ? '🔇 靜音' : '🔊 取消靜音';
     });
   </script>
 </body>
