@@ -1,1 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slow Map 台灣慢步地圖｜Animate Story + Map</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-dark: #050818;
+      --accent: #ffb347;
+      --accent-soft: rgba(255, 179, 71, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --card-bg: rgba(15, 23, 42, 0.9);
+      --border-subtle: rgba(148, 163, 184, 0.3);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text-main);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ========= Hero / Intro ========= */
+
+    header.hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2.5rem 1.5rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header.hero::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 20% 0%, #38bdf8 0, transparent 60%),
+        radial-gradient(circle at 80% 100%, #f97316 0, transparent 65%);
+      opacity: 0.22;
+      filter: blur(8px);
+      z-index: -1;
+      animation: glowFloat 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowFloat {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      100% {
+        transform: translate3d(0, -20px, 0) scale(1.05);
+      }
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      margin-bottom: 1.35rem;
+      backdrop-filter: blur(10px);
+      animation: fadeUp 0.6s ease-out 0.1s both;
+    }
+
+    .dot-pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.8);
+      animation: pulse 1.8s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.8);
+      }
+      100% {
+        box-shadow: 0 0 0 18px rgba(34, 197, 94, 0);
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 4vw, 3.1rem);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.03em;
+      animation: fadeUp 0.7s ease-out 0.15s both;
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, #f97316, #facc15, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 600px;
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      margin-bottom: 1.6rem;
+      animation: fadeUp 0.7s ease-out 0.25s both;
+    }
+
+    .hero-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.7rem;
+      animation: fadeUp 0.7s ease-out 0.35s both;
+    }
+
+    .hero-pill {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-muted);
+      backdrop-filter: blur(8px);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      opacity: 0.85;
+      animation: fadeUp 0.8s ease-out 0.55s both;
+    }
+
+    .scroll-icon {
+      width: 18px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-icon-dot {
+      width: 4px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.9);
+      animation: scrollDot 1.4s ease-in-out infinite;
+    }
+
+    @keyframes scrollDot {
+      0% {
+        transform: translateY(0);
+        opacity: 0.2;
+      }
+      40% {
+        transform: translateY(8px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(16px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 16px, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    /* ========= Layout for Story + Map ========= */
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    section.story-map {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 1.5rem;
+      align-items: stretch;
+      min-height: 100vh;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 900px) {
+      section.story-map {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .story-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      padding: 1rem 0.3rem 1rem 0;
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+    }
+
+    .story-column::-webkit-scrollbar {
+      width: 6px;
+    }
+    .story-column::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .story-column::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 999px;
+    }
+
+    .story-intro {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .story-intro strong {
+      color: var(--accent);
+    }
+
+    .step {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      outline: 1px solid transparent;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+      position: relative;
+      overflow: hidden;
+      opacity: 0.45;
+      transform: translate3d(0, 18px, 0);
+      transition:
+        opacity 0.4s ease-out,
+        transform 0.4s ease-out,
+        outline-color 0.3s ease-out,
+        box-shadow 0.3s ease-out,
+        border-color 0.3s ease-out;
+    }
+
+    .step::before {
+      content: attr(data-tag);
+      position: absolute;
+      top: 0.75rem;
+      right: 0.9rem;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(249, 115, 22, 0.4);
+    }
+
+    .step h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .step p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .step small {
+      display: inline-block;
+      margin-top: 0.35rem;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .step.active {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      outline-color: rgba(248, 250, 252, 0.18);
+      border-color: rgba(249, 115, 22, 0.65);
+      box-shadow: 0 24px 60px rgba(249, 115, 22, 0.35);
+    }
+
+    .step.active h3 {
+      color: var(--accent);
+    }
+
+    .map-column {
+      border-radius: 1.5rem;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 65%);
+      border: 1px solid var(--border-subtle);
+      padding: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .map-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding: 0 0.25rem;
+    }
+
+    .map-header span.label {
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+
+    .map-status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .map-status-dot::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.25);
+    }
+
+    #map {
+      flex: 1;
+      min-height: 320px;
+      border-radius: 1.2rem;
+      overflow: hidden;
+    }
+
+    @media (min-width: 901px) {
+      #map {
+        min-height: calc(100vh - 5rem);
+      }
+    }
+
+    .map-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0 0.25rem 0.2rem;
+    }
+
+    /* ========= Outro ========= */
+
+    section.outro {
+      padding: 1.5rem 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      margin-top: 1rem;
+    }
+
+    section.outro strong {
+      color: var(--accent);
+    }
+
+    @media (max-width: 600px) {
+      header.hero {
+        padding-inline: 1.1rem;
+      }
+
+      main {
+        padding-inline: 1rem;
+      }
+
+      .step {
+        padding-inline: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========= HERO ========= -->
+  <header class="hero">
+    <div class="hero-label">
+      <span class="dot-pulse"></span>
+      <span>Class Exercise · Animate Storytelling × Map</span>
+    </div>
+    <h1 class="hero-title">
+      Slow Map：<span>用滾動，走完一圈台灣</span>
+    </h1>
+    <p class="hero-subtitle">
+      當我們打開一張地圖，不只是找到目的地，而是看見每座城市的節奏。
+      向下捲動，讓故事帶著地圖一起移動。
+    </p>
+    <div class="hero-pill-row">
+      <div class="hero-pill">Scroll-triggered Storytelling</div>
+      <div class="hero-pill">Leaflet.js Map</div>
+      <div class="hero-pill">IntersectionObserver</div>
+      <div class="hero-pill">Taiwan City Route</div>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-icon">
+        <div class="scroll-icon-dot"></div>
+      </div>
+      <span>Scroll 開始旅程</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========= STORY + MAP LAYOUT ========= -->
+    <section class="story-map">
+      <!-- Left: Animated Story -->
+      <div class="story-column">
+        <p class="story-intro">
+          以下是四個節奏不同的城市：<strong>台北、台中、台南、花蓮</strong>。
+          每當你滑動到一個段落，右邊的地圖就會跟著切換，帶你「飛到」那座城市。
+        </p>
+
+        <!-- STEP 1 -->
+        <article
+          class="step"
+          data-tag="01"
+          data-lat="25.0375"
+          data-lng="121.5637"
+          data-title="台北：節奏很快的起點"
+        >
+          <h3>台北：最快的起點</h3>
+          <p>
+            旅程從台北開始。這裡的節奏很快，捷運、行人、訊息都在同一時間流動。
+            在這座城市，我們習慣待在螢幕前規劃下一步，卻很少抬頭看一眼天空。
+          </p>
+          <small>Scroll 到這一段時，地圖會飛到台北並放大標記。</small>
+        </article>
+
+        <!-- STEP 2 -->
+        <article
+          class="step"
+          data-tag="02"
+          data-lat="24.1631"
+          data-lng="120.6475"
+          data-title="台中：剛剛好的停頓"
+        >
+          <h3>台中：剛剛好的停頓</h3>
+          <p>
+            往中部走，空氣開始變得溫和。台中少了點急躁，多了點餘裕，
+            你可以在公園、咖啡館，讓一天的行程留一塊「什麼都不做」的空白。
+          </p>
+          <small>地圖跟著滑動，重心從北部移向中部。</small>
+        </article>
+
+        <!-- STEP 3 -->
+        <article
+          class="step"
+          data-tag="03"
+          data-lat="22.9999"
+          data-lng="120.2270"
+          data-title="台南：被時間放慢的城市"
+        >
+          <h3>台南：被時間放慢的城市</h3>
+          <p>
+            台南像一本翻舊了的筆記本，巷口都是故事。你可以花一整個下午，只為了吃完一碗麵、
+            多聽一個阿姨講完她記得的那個年代。
+          </p>
+          <small>顏色不變、節奏放慢，讓地圖告訴你南部的距離。</small>
+        </article>
+
+        <!-- STEP 4 -->
+        <article
+          class="step"
+          data-tag="04"
+          data-lat="23.9911"
+          data-lng="121.6114"
+          data-title="花蓮：靠近山海的呼吸"
+        >
+          <h3>花蓮：靠近山海的呼吸</h3>
+          <p>
+            最後，我們來到花蓮。這裡的時間被海浪切成一段一段，
+            山在旁邊當背景，提醒你：很多時候，停下來本身就是一種前進。
+          </p>
+          <small>當你閱讀到最後一段，地圖會停在花蓮，像一次深呼吸。</small>
+        </article>
+      </div>
+
+      <!-- Right: Map -->
+      <div class="map-column">
+        <div class="map-header">
+          <span class="label">Taiwan · Interactive Route Map</span>
+          <span class="map-status-dot">Scroll-linked</span>
+        </div>
+        <div id="map"></div>
+        <p class="map-note">
+          提示：滑動左邊的故事區塊，地圖會自動飛到對應城市，並放大目前的節點。
+        </p>
+      </div>
+    </section>
+
+    <!-- ========= OUTRO ========= -->
+    <section class="outro">
+      <p>
+        這個頁面示範：<strong>IntersectionObserver</strong> 控制文字區塊動畫，
+        同時透過 <strong>Leaflet.js</strong> 讓地圖跟著滾動節奏一起「說故事」。
+        之後你可以把城市、文案、配色換成自己的主題，就能快速變成課堂專題的 prototype。
+      </p>
+    </section>
+  </main>
+
+  <!-- ========= SCRIPTS ========= -->
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const map = L.map("map", {
+        scrollWheelZoom: false,
+        zoomControl: true,
+      }).setView([23.7, 121], 7); // 台灣大致中心
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+
+      const steps = Array.from(document.querySelectorAll(".step"));
+      const markers = [];
+
+      // 建立對應每個 step 的 marker
+      steps.forEach((step, index) => {
+        const lat = parseFloat(step.dataset.lat);
+        const lng = parseFloat(step.dataset.lng);
+        const title =
+          step.dataset.title ||
+          step.querySelector("h3")?.textContent ||
+          `地點 ${index + 1}`;
+
+        const marker = L.circleMarker([lat, lng], {
+          radius: 8,
+          color: "#f97316",
+          weight: 2,
+          fillColor: "#fed7aa",
+          fillOpacity: 0.65,
+          opacity: 0.8,
+        }).addTo(map);
+
+        marker.bindPopup(title);
+        markers.push(marker);
+      });
+
+      let activeIndex = -1;
+
+      function setActiveStep(newIndex) {
+        if (newIndex === activeIndex) return;
+        if (newIndex < 0 || newIndex >= steps.length) return;
+
+        // reset 舊的
+        if (activeIndex >= 0) {
+          steps[activeIndex].classList.remove("active");
+          markers[activeIndex].setStyle({
+            radius: 8,
+            opacity: 0.6,
+            fillOpacity: 0.4,
+          });
+        }
+
+        // 啟用新的
+        activeIndex = newIndex;
+        const step = steps[newIndex];
+        const lat = parseFloat(step.dataset.lat);
+        const lng = parseFloat(step.dataset.lng);
+
+        step.classList.add("active");
+
+        // 地圖動畫移動到對應城市
+        map.flyTo([lat, lng], 9, {
+          duration: 1.2,
+        });
+
+        // 強調目前 marker
+        markers[newIndex].setStyle({
+          radius: 14,
+          opacity: 1,
+          fillOpacity: 0.9,
+        });
+        markers[newIndex].openPopup();
+      }
+
+      // IntersectionObserver 監控每個 step
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+              const index = steps.indexOf(entry.target);
+              if (index !== -1) {
+                setActiveStep(index);
+              }
+            }
+          });
+        },
+        {
+          threshold: [0.6],
+        }
+      );
+
+      steps.forEach((step) => observer.observe(step));
+
+      // 預設啟動第一個
+      if (steps.length > 0) {
+        setActiveStep(0);
+      }
+    });
+  </script>
+</body>
+</html>
 
