@@ -153,6 +153,17 @@
       margin-bottom: 2rem;
     }
 
+    .hero-author-line {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+    }
+
+    .hero-author-line.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* Desktop keeps Chinese titles on a single line */
     .hero h1,
     .hero h2 {
@@ -236,6 +247,105 @@
       100% { transform: translate(-50%, 0); }
     }
 
+    .immersive-section {
+      background: #000;
+      min-height: 150vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10vh 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .immersive-inner {
+      max-width: 680px;
+      text-align: center;
+      color: #fff;
+      line-height: 1.8;
+      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+      letter-spacing: 0.03em;
+    }
+
+    .immersive-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .immersive-copy h5 {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.04em;
+      margin: 0;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .immersive-copy h5.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .transition-spacer {
+      position: relative;
+      min-height: 120vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6vw;
+      background: #000;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .chapter-intro {
+      position: relative;
+      min-height: 100vh;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .chapter-intro img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chapter-intro::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.25) 18%, transparent 50%);
+      filter: blur(16px);
+      pointer-events: none;
+    }
+
+    .chapter-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(8,8,8,0.1) 0%, rgba(8,8,8,0.55) 90%);
+    }
+
+    .chapter-title {
+      position: absolute;
+      left: 5vw;
+      bottom: 4vw;
+      color: #fff;
+      font-size: clamp(1rem, 2.2vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      max-width: 520px;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
     /* 手機版調整 */
     @media (max-width: 768px) {
       .hero {
@@ -261,6 +371,10 @@
       /* Let mobile wrap naturally to avoid overflow */
       .hero h1,
       .hero h2 {
+        white-space: normal;
+      }
+
+      .chapter-title {
         white-space: normal;
       }
 
@@ -295,7 +409,7 @@
     <div class="hero-content">
       <h1 id="hero-title" class="typewriter-line hero-entrance" data-text="唱給不在場的人" style="--delay: 0ms;"></h1>
       <h2 id="hero-subtitle" class="typewriter-line hero-entrance" data-text="紅包歌手的世代誤解與生存現場" style="--delay: 150ms;"></h2>
-      <h3 id="hero-author" class="hero-author hero-entrance" style="--delay: 300ms;">梁朝勛、彭賀琳、莊馨予</h3>
+      <h3 id="hero-author" class="hero-author-line">梁朝勛、彭賀琳、莊馨予</h3>
     </div>
 
     <div class="hero-image hero-entrance" style="--delay: 0ms;">
@@ -305,15 +419,44 @@
     <div id="scroll-hint" class="scroll-hint">SCROLL ↓</div>
   </section>
 
+  <section class="immersive-section">
+    <div class="immersive-inner">
+      <div class="immersive-copy">
+        <h5>夜晚的西門町總帶著一種說不出的濕氣。</h5>
+        <h5>對多數年輕人來說，</h5>
+        <h5>紅包場可能是陌生、甚至帶點神祕色彩的存在。</h5>
+        <h5>但在台灣的某段歷史裡，它曾是上萬個孤單靈魂的歸屬；</h5>
+        <h5>是一座用歌聲聚起的庶民劇院；</h5>
+        <h5>也是一個動盪年代裡最溫暖的避風港。</h5>
+      </div>
+    </div>
+  </section>
+
+  <section class="transition-spacer">
+    <span>scroll to reveal</span>
+  </section>
+
+  <section class="transition-spacer">
+    <span>the light slowly returns</span>
+  </section>
+
+  <section class="chapter-intro">
+    <img src="assets/red-envelope-theater.jpg" alt="紅包場場景">
+    <div class="chapter-overlay"></div>
+    <div class="chapter-title">➀ 燈紅酒綠的年代 — 紅包場的誕生與繁華</div>
+  </section>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const hero = document.querySelector(".hero");
       const titleEl = document.getElementById("hero-title");
       const subtitleEl = document.getElementById("hero-subtitle");
+      const authorEl = document.getElementById("hero-author");
       const scrollHint = document.getElementById("scroll-hint");
       const landingVideo = document.getElementById("landing-video");
       const typeTargets = [titleEl, subtitleEl];
       const heroEntrances = document.querySelectorAll(".hero-entrance");
+      const narrativeLines = document.querySelectorAll(".immersive-copy h5");
       let hasRun = false;
       let audioActivated = false;
 
@@ -349,24 +492,29 @@
         for (const el of typeTargets) {
           await typeText(el);
         }
+        if (authorEl) {
+          requestAnimationFrame(() => authorEl.classList.add("revealed"));
+        }
         requestAnimationFrame(() => {
-          setTimeout(() => scrollHint.classList.add("visible"), 400);
+          setTimeout(() => {
+            scrollHint.classList.add("visible");
+          }, 400);
         });
       };
 
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
+      if ("IntersectionObserver" in window && hero) {
+        const heroObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 startSequence();
-                observer.disconnect();
+                heroObserver.disconnect();
               }
             });
           },
           { threshold: 0.35 }
         );
-        observer.observe(hero);
+        heroObserver.observe(hero);
       } else {
         startSequence();
       }
@@ -399,6 +547,24 @@
 
         attemptPlay();
         userEvents.forEach((evt) => document.addEventListener(evt, handleUserAction, { passive: true }));
+      }
+
+      if (narrativeLines.length) {
+        const narrativeObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                narrativeLines.forEach((line, idx) => {
+                  line.style.transitionDelay = `${idx * 130}ms`;
+                  requestAnimationFrame(() => line.classList.add("visible"));
+                });
+                narrativeObserver.disconnect();
+              }
+            });
+          },
+          { threshold: 0.2 }
+        );
+        narrativeObserver.observe(narrativeLines[0]);
       }
     });
   </script>
